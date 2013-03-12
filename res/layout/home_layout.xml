@@ -14,7 +14,8 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:id="@+id/btnLogout"
-            android:layout_gravity="right" />
+            android:layout_gravity="right" 
+            android:onClick="logoutButtonClicked" />
         <TextView
             android:text="Welcome!"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -26,11 +27,13 @@
             android:text="Add expense"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnAddExpense" />
+            android:id="@+id/btnAddExpense" 
+            android:onClick="addButtonClicked" />
         <Button
             android:text="View expenses"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnViewExpense" />
+            android:id="@+id/btnViewExpense" 
+            android:onClick="viewButtonClicked" />
     </LinearLayout>
 </ScrollView>
