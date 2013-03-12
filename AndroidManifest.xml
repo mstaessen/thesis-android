@@ -26,6 +26,15 @@
             android:name="be.bertouttier.expenseapp.ExpenseFormOverviewActivity"
             android:label="@string/title_activity_expense_form_overview" >
         </activity>
+        <activity
+            android:name="be.bertouttier.expenseapp.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="be.bertouttier.expenseapp.MenuActivity"
+            android:label="@string/title_activity_menu" >
+        </activity>
     </application>
 
 </manifest>
