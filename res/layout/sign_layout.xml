@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <ExpenseApp.Droid.SignView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/signView"
+        android:minHeight="100dp"
+        android:layout_weight="5" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/linearLayout1"
+        android:layout_weight="2">
+        <EditText
+            android:inputType="textMultiLine"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/txtRemarks"
+            android:layout_weight="2"
+            android:gravity="top" />
+        <ToggleButton
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/toggleNotifications"
+            android:layout_weight="1"
+            android:textOn="Notifications on"
+            android:textOff="Notifications off"
+            android:checked="true" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/linearLayout2"
+        android:layout_weight="1">
+        <Button
+            android:text="Clear"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/clearButton"
+            android:layout_weight="1" />
+        <Button
+            android:text="Send"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/sendButton"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>
