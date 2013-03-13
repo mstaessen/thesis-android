@@ -35,6 +35,18 @@
             android:name="be.bertouttier.expenseapp.MenuActivity"
             android:label="@string/title_activity_menu" >
         </activity>
+        <activity
+            android:name="be.bertouttier.expenseapp.DetailsActivity"
+            android:label="@string/title_activity_details" >
+        </activity>
+        <activity
+            android:name="be.bertouttier.expenseapp.AbroadActivity"
+            android:label="@string/title_activity_abroad" >
+        </activity>
+        <activity
+            android:name="be.bertouttier.expenseapp.DomesticActivity"
+            android:label="@string/title_activity_domestic" >
+        </activity>
     </application>
 
 </manifest>

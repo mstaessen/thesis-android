@@ -6,5 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_expense_form_overview">ExpenseFormOverviewActivity</string>
     <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="title_activity_abroad">AbroadActivity</string>
+    <string name="title_activity_domestic">DomesticActivity</string>
 
 </resources>
