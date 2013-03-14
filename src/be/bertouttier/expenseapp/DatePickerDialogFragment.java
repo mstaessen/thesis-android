@@ -1,7 +1,6 @@
 package be.bertouttier.expenseapp;
 
-import java.util.Date;
-
+import java.util.Calendar;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
@@ -12,14 +11,14 @@ import android.os.Bundle;
 public class DatePickerDialogFragment extends DialogFragment {
 
 	private Context _context;
-	private Date _date;
+	private Calendar _date;
 	private OnDateSetListener _listener;
 	
 	public DatePickerDialogFragment()
 	{
 	}
 	
-	public void setDatePickerDialogFragment(Context context, Date date, OnDateSetListener listener)
+	public void setDatePickerDialogFragment(Context context, Calendar date, OnDateSetListener listener)
 	{
 		_context = context;
 		_date = date;
@@ -31,7 +30,7 @@ public class DatePickerDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedState)
 	{
-		DatePickerDialog dialog = new DatePickerDialog(_context, _listener, _date.getYear(), _date.getMonth() - 1, _date.getDate());
+		DatePickerDialog dialog = new DatePickerDialog(_context, _listener, _date.get(Calendar.YEAR), _date.get(Calendar.MONTH) - 1, _date.get(Calendar.DATE));
 		return dialog;
 	}
 

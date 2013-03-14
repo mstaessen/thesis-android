@@ -20,7 +20,7 @@ public class AddFragment extends Fragment {
 		LocalActivityManager mLocalActivityManager = new LocalActivityManager(this.getActivity(), false);
 		mLocalActivityManager.dispatchCreate(savedInstanceState);
 		tabhost.setup(mLocalActivityManager);
-
+		
 		TabHost.TabSpec spec;     // Resusable TabSpec for each tab
 		Intent intent;            // Reusable Intent for each tab
 		

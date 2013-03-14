@@ -21,11 +21,11 @@ public class SignFragment extends Fragment {
 		
 		View view = inflater.inflate(R.layout.sign_layout, container, false);
 		
-		Button clearButton = (Button)view.findViewById (R.id.clearButton);
-		Button sendButton = (Button)view.findViewById (R.id.sendButton);
-		
-		EditText remarks = (EditText)view.findViewById (R.id.txtRemarks);
-		ToggleButton notification = (ToggleButton)view.findViewById (R.id.toggleNotifications);
+//		Button clearButton = (Button)view.findViewById (R.id.clearButton);
+//		Button sendButton = (Button)view.findViewById (R.id.sendButton);
+//		
+//		EditText remarks = (EditText)view.findViewById (R.id.txtRemarks);
+//		ToggleButton notification = (ToggleButton)view.findViewById (R.id.toggleNotifications);
 
 		signView = (SignView) view.findViewById (R.id.signView);
 		

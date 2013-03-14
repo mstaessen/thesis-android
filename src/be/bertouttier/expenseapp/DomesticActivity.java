@@ -1,7 +1,9 @@
 package be.bertouttier.expenseapp;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,7 +30,7 @@ import android.widget.Toast;
 public class DomesticActivity extends Activity {
 
 	static final int DATE_DIALOG_ID = 0;
-	private Date date;
+	private Calendar date;
 	private TextView pickDate;
 	private AutoCompleteTextView txtProjectCode;
 	private ImageButton chooseButton;
@@ -51,9 +53,9 @@ public class DomesticActivity extends Activity {
 		pickDate = (TextView) findViewById (R.id.pickDate);
 		txtProjectCode = (AutoCompleteTextView) findViewById (R.id.txtProjectCode);
 		chooseButton = (ImageButton) findViewById (R.id.chooseImageButton);
-		Button addButton = (Button) findViewById (R.id.addButton);
+//		Button addButton = (Button) findViewById (R.id.addButton);
 
-		date = new Date();
+		date = new GregorianCalendar();
 		UpdateDisplay ();
 
 		try {
@@ -133,8 +135,8 @@ public class DomesticActivity extends Activity {
 
 	private void UpdateDisplay()
 	{
-		SimpleDateFormat format = new SimpleDateFormat("d");
-		pickDate.setText(format.format(date));
+		SimpleDateFormat format = new SimpleDateFormat("d MMMM y");
+		pickDate.setText(format.format(date.getTime()));
 	}
 	
 	@Override
@@ -143,7 +145,7 @@ public class DomesticActivity extends Activity {
 		switch (id)
 		{
 			case DATE_DIALOG_ID:
-				return new DatePickerDialog(this, mDateSetListener, date.getYear(), date.getMonth() - 1, date.getDay());
+				return new DatePickerDialog(this, mDateSetListener, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE));
 		}
 		return null;
 	}
@@ -167,7 +169,7 @@ public class DomesticActivity extends Activity {
 
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
-                	date = new Date(year, monthOfYear, dayOfMonth);
+                	date = new GregorianCalendar(year, monthOfYear, dayOfMonth);
             		UpdateDisplay();
                 }
             };

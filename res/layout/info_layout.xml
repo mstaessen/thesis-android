@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/pickDate"
             android:textSize="9pt" 
+            android:clickable="true"
             android:onClick="datePickerClicked" />
         <TextView
             android:layout_width="fill_parent"

@@ -1,7 +1,6 @@
 package be.bertouttier.expenseapp;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Intent;
