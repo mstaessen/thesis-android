@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -65,12 +66,12 @@ public class DomesticActivity extends Activity {
 		}
 	}
 
-	private void pickDateClicked()
+	public void pickDateClicked(View view)
 	{
 		showDialog (DATE_DIALOG_ID);
 	}
 	
-	private void chooseButtonClicked ()
+	public void chooseButtonClicked(View view)
 	{
 		String[] items = { "Take Photo", "Choose Existing" };
 		
@@ -100,7 +101,7 @@ public class DomesticActivity extends Activity {
 		alertDialog.show();
 	}
 
-	private void addButtonClicked ()
+	public void addButtonClicked(View view)
 	{
 		// implement validation here 
 		RadioGroup typeGroup = (RadioGroup) findViewById (R.id.typeGroup);

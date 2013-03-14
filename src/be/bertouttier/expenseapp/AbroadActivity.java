@@ -1,20 +1,30 @@
 package be.bertouttier.expenseapp;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,10 +55,6 @@ public class AbroadActivity extends Activity {
 		Button addButton = (Button) findViewById (R.id.addButton);
 		EditText txtAmount = (EditText) findViewById (R.id.txtAmount);
 
-		// set date button
-		pickDate.Click += delegate {
-			ShowDialog (DATE_DIALOG_ID);
-		};
 		date = new Date();
 		UpdateDisplay ();
 
@@ -66,77 +72,113 @@ public class AbroadActivity extends Activity {
 		} catch (Exception ex) {
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
 		}
-		
-		// set choose button event handler
-		chooseButton.Click += chooseButtonClicked;
-		
-		// set add button event handler
-		addButton.Click += addButtonClicked;
 
-		txtAmount.TextChanged += OnAmountOrCurrencyChange;
-		currencySpinner.ItemSelected += OnAmountOrCurrencyChange;
+		txtAmount.addTextChangedListener(new TextWatcher() {	
+			@Override
+	        public void onTextChanged(CharSequence s, int start, int before, int count)
+	        {
+	        	OnAmountOrCurrencyChange ();
+	        }
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+	    });
+//		currencySpinner.ItemSelected += OnAmountOrCurrencyChange;
+		currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		    @Override
+		    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+		    	OnAmountOrCurrencyChange();
+		    }
+
+		    @Override
+		    public void onNothingSelected(AdapterView<?> parentView) {
+		        // your code here
+		    }
+
+		});
 	}
 
-	private void OnAmountOrCurrencyChange (object sender, EventArgs e)
+	private void OnAmountOrCurrencyChange ()
 	{
-		TextView txtAmountEuro = findViewById<TextView> (R.id.txtAmountEuro);
-		EditText txtAmount = findViewById<EditText> (R.id.txtAmount);
-		currencySpinner = findViewById<Spinner> (R.id.currencySpinner);
+		TextView txtAmountEuro = (TextView) findViewById (R.id.txtAmountEuro);
+		EditText txtAmount = (EditText) findViewById (R.id.txtAmount);
+		currencySpinner = (Spinner) findViewById (R.id.currencySpinner);
 
-		string test = (string)currencySpinner.SelectedItem;
+		String test = (String)currencySpinner.getSelectedItem();
 
 		try{
-			txtAmountEuro.Text = Backend.convertToEuro(float.Parse(txtAmount.Text), (string)currencySpinner.SelectedItem) + " Û";
+//			txtAmountEuro.Text = Backend.convertToEuro(float.Parse(txtAmount.Text), (string)currencySpinner.SelectedItem) + " Û";
 		}catch (Exception ex) {
-			txtAmountEuro.Text = "";
+			txtAmountEuro.setText("");
 		}
 	}
 	
-	private void chooseButtonClicked (object s, EventArgs args)
+	public void pickDateClicked(View view)
 	{
-		string[] items = { "Take Photo", "Choose Existing" };
+		showDialog (DATE_DIALOG_ID);
+	}
+	
+	public void chooseButtonClicked(View view)
+	{
+		String[] items = { "Take Photo", "Choose Existing" };
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		AlertDialog alertDialog;
 		
-		builder.SetTitle("Select");
-		builder.SetSingleChoiceItems(items, -1, delegate(object sender, DialogClickEventArgs e) {
-			if ((int)e.Which == 0) {
-				Intent takePicture = new Intent(MediaStore.ActionImageCapture);
-				StartActivityForResult(takePicture, 0);
-				alertDialog.Dismiss();
-			}
-			else if ((int)e.Which == 1) {
-				Intent pickPhoto = new Intent(Intent.ActionPick, MediaStore.Images.Media.ExternalContentUri);
-				StartActivityForResult(pickPhoto, 1);
-				alertDialog.Dismiss();
-			} 
-		});
+		builder.setTitle("Select");
+		builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+            	if (which == 0) {
+    				Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    				startActivityForResult(takePicture, 0);
+    				dialog.dismiss();
+    			}
+    			else if (which == 1) {
+    				Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    				startActivityForResult(pickPhoto, 1);
+    				dialog.dismiss();
+    			}
+            }
+        });
 		
-		alertDialog = builder.Create();
-		alertDialog.Show();
+		alertDialog = builder.create();
+		alertDialog.show();
 	}
 	
-	private void addButtonClicked (object sender, EventArgs e)
+	public void addButtonClicked(View view)
 	{
 		// implement validation here 
-		RadioGroup typeGroup = findViewById<RadioGroup> (R.id.typeGroup);
-		EditText txtAmout = findViewById<EditText> (R.id.txtAmount);
-		EditText txtRemarks = findViewById<EditText> (R.id.txtRemarks);
+		RadioGroup typeGroup = (RadioGroup) findViewById (R.id.typeGroup);
+		EditText txtAmout = (EditText) findViewById (R.id.txtAmount);
+		EditText txtRemarks = (EditText) findViewById (R.id.txtRemarks);
 		
-		if (typeGroup.CheckedRadioButtonId == R.id.otherRadioButton && txtRemarks.Text.Length <= 0) {
-			Console.WriteLine("Error, no remarks");
+		if (typeGroup.getCheckedRadioButtonId() == R.id.otherRadioButton && txtRemarks.getText().length() <= 0) {
+			Log.d("!!", "Error, no remarks");
 		}
 
 		try {
-			Backend.createAbroadExpense(date, txtProjectCode.Text, float.Parse(txtAmout.Text), txtRemarks.Text, BitmapToBase64String(MediaStore.Images.Media.GetBitmap(this.ContentResolver, imageUri)), (string)currencySpinner.SelectedItem, int.Parse(findViewById<RadioButton>(typeGroup.CheckedRadioButtonId).Tag.ToString())); 
-			Toast.MakeText(this, "Added expense.", ToastLength.Short).Show(); 
+//			Backend.createAbroadExpense(date, txtProjectCode.Text, float.Parse(txtAmout.Text), txtRemarks.Text, BitmapToBase64String(MediaStore.Images.Media.GetBitmap(this.ContentResolver, imageUri)), (string)currencySpinner.SelectedItem, int.Parse(findViewById<RadioButton>(typeGroup.CheckedRadioButtonId).Tag.ToString())); 
+			Toast.makeText(this, "Added expense.", Toast.LENGTH_SHORT).show(); 
 		} catch(Exception ex){
-			Toast.MakeText(this, ex.Message, ToastLength.Short).Show();
+			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
-	protected override void OnActivityResult (int requestCode, int resultCode, Intent data)
+	@Override
+	protected void onActivityResult (int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult (requestCode, resultCode, data);
 		
@@ -148,7 +190,8 @@ public class AbroadActivity extends Activity {
 	
 	private void UpdateDisplay()
 	{
-		pickDate.Text = date.ToString("d");
+		SimpleDateFormat format = new SimpleDateFormat("d MMMM y");
+		pickDate.setText(format.format(date));
 	}
 	
 	@Override

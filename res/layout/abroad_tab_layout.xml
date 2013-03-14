@@ -24,7 +24,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/pickDate"
-                    android:textSize="9pt" />
+                    android:textSize="9pt"
+                    android:clickable="true"
+                    android:onClick="pickDateClicked" />
                 <AutoCompleteTextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -96,13 +98,15 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/chooseImageButton"
-                    android:minHeight="100px" />
+                    android:minHeight="100px"
+                    android:onClick="chooseButtonClicked" />
                 <Button
                     android:text="Add"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/addButton"
-                    android:background="#ff18ca4e" />
+                    android:background="#ff18ca4e"
+                    android:onClick="addButtonClicked" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
