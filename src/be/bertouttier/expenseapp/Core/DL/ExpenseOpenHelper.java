@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 
-public class EmployeeOpenHelper extends SQLiteOpenHelper {
-	public EmployeeOpenHelper(Context context, String name, CursorFactory factory,
+public class ExpenseOpenHelper extends SQLiteOpenHelper {
+	public ExpenseOpenHelper(Context context, String name, CursorFactory factory,
 			int version) {
 		super(context, name, factory, version);
 	}
@@ -22,8 +22,8 @@ public class EmployeeOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		try{
-			EmployeeTableDefinition employeeTableDefinition = new EmployeeTableDefinition();
-			employeeTableDefinition.onCreate(db);
+			ExpenseTableDefinition expenseTableDefinition = new ExpenseTableDefinition();
+			expenseTableDefinition.onCreate(db);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -32,8 +32,8 @@ public class EmployeeOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		try{
-			EmployeeTableDefinition employeeTableDefinition = new EmployeeTableDefinition();
-			employeeTableDefinition.onUpgrade(db, oldVersion, newVersion);
+			ExpenseTableDefinition expenseTableDefinition = new ExpenseTableDefinition();
+			expenseTableDefinition.onUpgrade(db, oldVersion, newVersion);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -41,4 +41,3 @@ public class EmployeeOpenHelper extends SQLiteOpenHelper {
 	}
 
 }
-
