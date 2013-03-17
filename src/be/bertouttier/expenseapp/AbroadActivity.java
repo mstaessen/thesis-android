@@ -1,8 +1,11 @@
 package be.bertouttier.expenseapp;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import be.bertouttier.expenseapp.Core.BL.Managers.ExpenseManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
@@ -14,6 +17,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,7 +40,8 @@ public class AbroadActivity extends Activity {
 	private ImageButton chooseButton;
 	private android.net.Uri imageUri;
 	private Spinner currencySpinner;
-
+	private ExpenseManager em;
+	
 	@Override
 	protected void onCreate (Bundle bundle)
 	{
@@ -44,6 +49,8 @@ public class AbroadActivity extends Activity {
 		
 		// Create your application here
 		setContentView (R.layout.abroad_tab_layout);
+		
+		em = new ExpenseManager(getApplicationContext());
 		
 		// get views
 		pickDate = (TextView) findViewById (R.id.pickDate);
@@ -58,7 +65,7 @@ public class AbroadActivity extends Activity {
 
 		try {
 			// Set autocomplete view
-			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, new String[]{"test","test"});
+			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, em.getProjectCodeSuggestion(""));
 			txtProjectCode.setAdapter(adapter);
 
 			// set currency spinner
@@ -160,7 +167,7 @@ public class AbroadActivity extends Activity {
 	{
 		// implement validation here 
 		RadioGroup typeGroup = (RadioGroup) findViewById (R.id.typeGroup);
-//		EditText txtAmout = (EditText) findViewById (R.id.txtAmount);
+		EditText txtAmout = (EditText) findViewById (R.id.txtAmount);
 		EditText txtRemarks = (EditText) findViewById (R.id.txtRemarks);
 		
 		if (typeGroup.getCheckedRadioButtonId() == R.id.otherRadioButton && txtRemarks.getText().length() <= 0) {
@@ -168,7 +175,7 @@ public class AbroadActivity extends Activity {
 		}
 
 		try {
-//			Backend.createAbroadExpense(date, txtProjectCode.Text, float.Parse(txtAmout.Text), txtRemarks.Text, BitmapToBase64String(MediaStore.Images.Media.GetBitmap(this.ContentResolver, imageUri)), (string)currencySpinner.SelectedItem, int.Parse(findViewById<RadioButton>(typeGroup.CheckedRadioButtonId).Tag.ToString())); 
+			em.createAbroadExpense(date, txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , (String)currencySpinner.getSelectedItem(), Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
 			Toast.makeText(this, "Added expense.", Toast.LENGTH_SHORT).show(); 
 		} catch(Exception ex){
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -204,17 +211,11 @@ public class AbroadActivity extends Activity {
 	}
 	
 	private String BitmapToBase64String(Bitmap bmp)
-	{
-//		using (MemoryStream stream = new MemoryStream())
-//		{
-//			if (bmp.Compress(Bitmap.CompressFormat.Png, 100, stream))
-//			{
-//				byte[] image = stream.ToArray();
-//				return Convert.ToBase64String(image);
-//			}
-//			return null;
-//		}
-		return null;
+	{	
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+		bmp.compress(Bitmap.CompressFormat.PNG, 100, baos); //bmp is the bitmap object   
+		byte[] b = baos.toByteArray();
+		return Base64.encodeToString(b, Base64.DEFAULT);
 	}
 	
 	private DatePickerDialog.OnDateSetListener mDateSetListener =

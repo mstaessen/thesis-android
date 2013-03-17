@@ -1,9 +1,12 @@
 package be.bertouttier.expenseapp;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import be.bertouttier.expenseapp.Core.BL.Managers.ExpenseManager;
 
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,6 +17,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -35,6 +39,7 @@ public class DomesticActivity extends Activity {
 	private AutoCompleteTextView txtProjectCode;
 	private ImageButton chooseButton;
 	private android.net.Uri imageUri;
+	private ExpenseManager em;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,6 +54,8 @@ public class DomesticActivity extends Activity {
 		super.onCreate(bundle);
 		setContentView(R.layout.domestic_tab_layout);
 
+		em = new ExpenseManager(getApplicationContext());
+		
 		// get views
 		pickDate = (TextView) findViewById (R.id.pickDate);
 		txtProjectCode = (AutoCompleteTextView) findViewById (R.id.txtProjectCode);
@@ -60,8 +67,8 @@ public class DomesticActivity extends Activity {
 
 		try {
 			// Set autocomplete view
-//			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, Backend.projectCodes.Values.ToArray ());
-			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, new String[] {"Your info","Overview","Add"});
+			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, em.getProjectCodeSuggestion(""));
+//			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, new String[] {"Your info","Overview","Add"});
 			txtProjectCode.setAdapter(adapter);
 		} catch (Exception ex) {
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -115,7 +122,7 @@ public class DomesticActivity extends Activity {
 		}
 
 		try {
-//			Backend.createDomesticExpense(date, txtProjectCode.Text, float.Parse(txtAmout.Text), txtRemarks.Text, BitmapToBase64String(MediaStore.Images.Media.GetBitmap(this.ContentResolver, imageUri)) , int.Parse(findViewById<RadioButton>(typeGroup.CheckedRadioButtonId).Tag.ToString())); 
+			em.createDomesticExpense(date, txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
 			Toast.makeText(this, "Added expense.", Toast.LENGTH_SHORT).show(); 
 		} catch(Exception ex){
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -151,17 +158,11 @@ public class DomesticActivity extends Activity {
 	}
 
 	private String BitmapToBase64String(Bitmap bmp)
-	{
-//		using (MemoryStream stream = new MemoryStream())
-//		{
-//			if (bmp.Compress(Bitmap.CompressFormat.Png, 100, stream))
-//			{
-//				byte[] image = stream.ToArray();
-//				return Convert.ToBase64String(image);
-//			}
-//			return null;
-//		}
-		return null;
+	{	
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+		bmp.compress(Bitmap.CompressFormat.PNG, 100, baos); //bmp is the bitmap object   
+		byte[] b = baos.toByteArray();
+		return Base64.encodeToString(b, Base64.DEFAULT);
 	}
 	
 	private DatePickerDialog.OnDateSetListener mDateSetListener =

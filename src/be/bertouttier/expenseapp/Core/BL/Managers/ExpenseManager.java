@@ -11,13 +11,14 @@ import be.bertouttier.expenseapp.Core.DL.ExpenseDao;
 import be.bertouttier.expenseapp.Core.DL.ExpenseOpenHelper;
 import be.bertouttier.expenseapp.Core.DL.ExpenseTableDefinition;
 import be.bertouttier.expenseapp.Core.Exceptions.ExpenseException;
+import be.bertouttier.expenseapp.Core.SAL.ExpenseService;
 
 public class ExpenseManager {
 
 	private Context context;
     private SQLiteDatabase database;
     private ExpenseDao expenseDao;
-//	private ExpenseService svc;
+	private ExpenseService svc;
 //	private ExpenseManagerListener listener;
 	
 	public ExpenseManager(Context context){
@@ -27,7 +28,7 @@ public class ExpenseManager {
 
         this.expenseDao = new ExpenseDao(new ExpenseTableDefinition(), database); 
 //        this.listener = listener;
-//        this.svc = new UserService(this);
+        this.svc = new ExpenseService();
 	}
 	
 	//Getters and setters
@@ -56,19 +57,19 @@ public class ExpenseManager {
 	}
 
 	// Methods
-//	public List<String> getProjectCodeSuggestion (String searchTerm)
-//	{
+	public List<String> getProjectCodeSuggestion (String searchTerm)
+	{
 //		try {
-////			return svc.getProjectCodeSuggestion (searchTerm);
+			return svc.getProjectCodeSuggestion (searchTerm);
 //		} catch (Exception ex) {
 ////			throw new ExpenseException ("Error while getting project codes for searchterm : " + searchTerm, ex);
 //		}
-//	}
+	}
 
 	
 
-	public void createDomesticExpense(Calendar date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId) throws ExpenseException{
-		createExpense(date, projectCode, amount, remarks, evidence, currency, expenseTypeId, 1);
+	public void createDomesticExpense(Calendar date, String projectCode, float amount, String remarks, String evidence, int expenseTypeId) throws ExpenseException{
+		createExpense(date, projectCode, amount, remarks, evidence, "EUR", expenseTypeId, 1);
 	}
 
 	public void createAbroadExpense(Calendar date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId) throws ExpenseException{
