@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 public class InfoFragment extends Fragment implements OnDateSetListener {
 
@@ -41,7 +44,6 @@ public class InfoFragment extends Fragment implements OnDateSetListener {
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = inflater.inflate (R.layout.info_layout, container, false);
-
 		Spinner unitSpinner = (Spinner) view.findViewById (R.id.UnitSpinner);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String> (this.getActivity(), android.R.layout.simple_list_item_1, units_array);
 		adapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
@@ -53,17 +55,18 @@ public class InfoFragment extends Fragment implements OnDateSetListener {
 			Toast.makeText (this.getActivity(), ex.getMessage(), Toast.LENGTH_SHORT).show (); 
 		}
 
+		final InfoFragment me = this;
+		
 		// Mont picker
 		pickDate = (TextView) view.findViewById (R.id.pickDate);
-//		pickDate.setOnClickListener(new OnClickListener() {
-//	        @Override
-//	        public void onClick(final View v) {
-//	        	Log.d("!!", "test");
-//	    		DatePickerDialogFragment dialog = new DatePickerDialogFragment ();
-//	    		dialog.setDatePickerDialogFragment(this.getActivity(), date, this);
-//	    		dialog.show (this.getFragmentManager(), null);
-//	        }
-//	    });
+		pickDate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d("!!", "test");
+        		DatePickerDialogFragment dialog = new DatePickerDialogFragment ();
+        		dialog.setDatePickerDialogFragment(getActivity(), date, me);
+        		dialog.show (getFragmentManager(), null);
+            }
+        });
 		
 		date = GregorianCalendar.getInstance();
 		UpdateDisplay ();
@@ -104,7 +107,7 @@ public class InfoFragment extends Fragment implements OnDateSetListener {
 	public void onDateSet(DatePicker view, int year, int monthOfYear,
 			int dayOfMonth) {
 		// TODO Auto-generated method stub
-		this.date = new GregorianCalendar(year, monthOfYear + 1, dayOfMonth);
+		this.date = new GregorianCalendar(year, monthOfYear, dayOfMonth);
 		UpdateDisplay();
 	}
 }

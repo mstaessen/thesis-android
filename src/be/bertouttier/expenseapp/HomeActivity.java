@@ -1,18 +1,38 @@
 package be.bertouttier.expenseapp;
 
+import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManager;
+import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManagerListener;
+import be.bertouttier.expenseapp.Core.DAL.Employee;
+import be.bertouttier.expenseapp.Core.Exceptions.EmployeeException;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
-public class HomeActivity extends Activity {
-
+public class HomeActivity extends Activity implements EmployeeManagerListener {
+	private EmployeeManager em = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_layout);
+		
+		em = new EmployeeManager(getApplicationContext(), this);
+		
+		TextView lblWelcome = (TextView) findViewById (R.id.lblWelcome);
+		
+		
+		try { 
+			if (!em.isAuthenticated ()) {
+				startActivity(new Intent(this, LoginActivity.class));
+			}
+			lblWelcome.setText("Welcome " + em.getFullName () + "!");
+		} catch (Exception ex) {
+			// Show error dialog
+		}
 	}
 
 	@Override
@@ -38,6 +58,23 @@ public class HomeActivity extends Activity {
 	    // Do something in response to button
 		Log.d("!!", "test");
 //		Backend.logout();
+		try {
+			em.logout();
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onLoginCompleted(Employee user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onLogoutCompleted() {
+		// TODO Auto-generated method stub
 		startActivity(new Intent(this, LoginActivity.class));
 	}
 }
