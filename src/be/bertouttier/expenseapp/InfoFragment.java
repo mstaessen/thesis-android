@@ -4,6 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManager;
+import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManagerListener;
+import be.bertouttier.expenseapp.Core.DAL.Employee;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -15,12 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 
-public class InfoFragment extends Fragment implements OnDateSetListener {
+public class InfoFragment extends Fragment implements OnDateSetListener, EmployeeManagerListener {
 
 	static String[] units_array = new String[]
 	{
@@ -39,10 +44,13 @@ public class InfoFragment extends Fragment implements OnDateSetListener {
 	int DATE_DIALOG_ID = 0;
 	private Calendar date;
 	private TextView pickDate;
-
+	private EmployeeManager em;
+	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		em = new EmployeeManager(getActivity().getApplicationContext(), this);
+		
 		View view = inflater.inflate (R.layout.info_layout, container, false);
 		Spinner unitSpinner = (Spinner) view.findViewById (R.id.UnitSpinner);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String> (this.getActivity(), android.R.layout.simple_list_item_1, units_array);
@@ -50,7 +58,7 @@ public class InfoFragment extends Fragment implements OnDateSetListener {
 		unitSpinner.setAdapter(adapter);
 		
 		try {
-//			unitSpinner.SetSelection (Backend.getUnitId () - 1, false);
+			unitSpinner.setSelection (em.getUnitId () - 1, false);
 		} catch (Exception ex) {
 			Toast.makeText (this.getActivity(), ex.getMessage(), Toast.LENGTH_SHORT).show (); 
 		}
@@ -72,16 +80,16 @@ public class InfoFragment extends Fragment implements OnDateSetListener {
 		UpdateDisplay ();
 		
 		//firstname, lastname, number, email
-//		TextView lblFirstName = (TextView) view.findViewById (R.id.txtFirstName);
-//		TextView lblLastName = (TextView) view.findViewById (R.id.txtLastName);
-//		EditText lblEmployeeNumber = (EditText) view.findViewById (R.id.txtEmployeeNumber);
-//		EditText lblEmail = (EditText) view.findViewById (R.id.txtEmail);
+		TextView lblFirstName = (TextView) view.findViewById (R.id.txtFirstName);
+		TextView lblLastName = (TextView) view.findViewById (R.id.txtLastName);
+		EditText lblEmployeeNumber = (EditText) view.findViewById (R.id.txtEmployeeNumber);
+		EditText lblEmail = (EditText) view.findViewById (R.id.txtEmail);
 
 		try {
-//			lblFirstName.setText(Backend.getFirstName ());
-//			lblLastName.Text = Backend.getLastName ();
-//			lblEmployeeNumber.Text = Backend.getEmployeeNumber ().ToString ();
-//			lblEmail.Text = Backend.getEmail ();
+			lblFirstName.setText(em.getFirstName ());
+			lblLastName.setText(em.getLastName ());
+			lblEmployeeNumber.setText(String.valueOf(em.getEmployeeNumber()));
+			lblEmail.setText(em.getEmail ());
 		} catch (Exception ex) {
 			Toast.makeText (this.getActivity(), ex.getMessage(), Toast.LENGTH_SHORT).show (); 
 		}
@@ -109,5 +117,17 @@ public class InfoFragment extends Fragment implements OnDateSetListener {
 		// TODO Auto-generated method stub
 		this.date = new GregorianCalendar(year, monthOfYear, dayOfMonth);
 		UpdateDisplay();
+	}
+
+	@Override
+	public void onLoginCompleted(Employee user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onLogoutCompleted() {
+		// TODO Auto-generated method stub
+		
 	}
 }
