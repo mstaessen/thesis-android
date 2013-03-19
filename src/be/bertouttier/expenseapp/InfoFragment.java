@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import be.bertouttier.expenseapp.Core.BL.Backend;
 import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManager;
 import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManagerListener;
 import be.bertouttier.expenseapp.Core.DAL.Employee;
@@ -44,12 +45,12 @@ public class InfoFragment extends Fragment implements OnDateSetListener, Employe
 	int DATE_DIALOG_ID = 0;
 	private Calendar date;
 	private TextView pickDate;
-	private EmployeeManager em;
+	private Backend backend;
 	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		em = new EmployeeManager(getActivity().getApplicationContext(), this);
+		backend = Backend.getInstance(getActivity().getApplicationContext(), null);
 		
 		View view = inflater.inflate (R.layout.info_layout, container, false);
 		Spinner unitSpinner = (Spinner) view.findViewById (R.id.UnitSpinner);
@@ -58,7 +59,7 @@ public class InfoFragment extends Fragment implements OnDateSetListener, Employe
 		unitSpinner.setAdapter(adapter);
 		
 		try {
-			unitSpinner.setSelection (em.getUnitId () - 1, false);
+			unitSpinner.setSelection (backend.getUnitId () - 1, false);
 		} catch (Exception ex) {
 			Toast.makeText (this.getActivity(), ex.getMessage(), Toast.LENGTH_SHORT).show (); 
 		}
@@ -86,10 +87,10 @@ public class InfoFragment extends Fragment implements OnDateSetListener, Employe
 		EditText lblEmail = (EditText) view.findViewById (R.id.txtEmail);
 
 		try {
-			lblFirstName.setText(em.getFirstName ());
-			lblLastName.setText(em.getLastName ());
-			lblEmployeeNumber.setText(String.valueOf(em.getEmployeeNumber()));
-			lblEmail.setText(em.getEmail ());
+			lblFirstName.setText(backend.getFirstName ());
+			lblLastName.setText(backend.getLastName ());
+			lblEmployeeNumber.setText(String.valueOf(backend.getEmployeeNumber()));
+			lblEmail.setText(backend.getEmail ());
 		} catch (Exception ex) {
 			Toast.makeText (this.getActivity(), ex.getMessage(), Toast.LENGTH_SHORT).show (); 
 		}

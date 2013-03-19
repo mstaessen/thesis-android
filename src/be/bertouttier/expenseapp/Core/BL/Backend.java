@@ -1,5 +1,6 @@
 package be.bertouttier.expenseapp.Core.BL;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -9,161 +10,174 @@ import java.util.Map;
 import android.content.Context;
 import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManager;
 import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManagerListener;
+import be.bertouttier.expenseapp.Core.BL.Managers.ExpenseFormManager;
 import be.bertouttier.expenseapp.Core.BL.Managers.ExpenseManager;
+import be.bertouttier.expenseapp.Core.DAL.Employee;
 import be.bertouttier.expenseapp.Core.DAL.Expense;
+import be.bertouttier.expenseapp.Core.DAL.SavedExpenseForm;
+import be.bertouttier.expenseapp.Core.Exceptions.EmployeeException;
 import be.bertouttier.expenseapp.Core.Exceptions.ExpenseException;
+import be.bertouttier.expenseapp.Core.SAL.CurrencyService;
 
 public class Backend implements EmployeeManagerListener {
 	private static Backend instance = new Backend();
-	private Context context;
+	private static Context context;
+	private static BackendListener listener;
 	private static EmployeeManager um;
-//	private static ExpenseFormManager efm;
+	private static ExpenseFormManager efm;
 	private static ExpenseManager em;
-//	private static CurrencyAPI curAPI;
+	private static CurrencyService curAPI;
 	private static Map<Integer, String> _projectCodes;
 	
-	private Backend() { 
+	private Backend() {
 		um = new EmployeeManager(context, this);
-//		efm = new ExpenseFormManager();
+		efm = new ExpenseFormManager();
 		em = new ExpenseManager(context);
-//		curAPI = new CurrencyAPI();
+		curAPI = new CurrencyService();
 		_projectCodes = new HashMap<Integer, String>();
 	}
 	
-	public static Backend getInstance(Context context) {
+	public static Backend getInstance(Context context, BackendListener listener) {
+		instance.listener = listener;
 		instance.context = context;
+		um.setContext(context);
+		em.setContext(context);
 		return instance;
 	}
 	
-	protected static void demoMethod( ) {
-	   System.out.println("demoMethod for singleton"); 
-	}
-	
 	// User manipulations
-	protected static void login (String email, String password)
+	public static void login (String email, String password)
 	{
 		um.login(email, password);
 	}
 
-	protected static void logout ()
+	public static void logout () throws EmployeeException
 	{
 		um.logout();
 		em.deleteAllExpenses();
 	}
 
-	protected static String getFirstName ()
+	public static String getFirstName () throws EmployeeException
 	{
 		return um.getFirstName();
 	}
 
-	protected static String getLastName ()
+	public static String getLastName () throws EmployeeException
 	{
 		return um.getLastName();
 	}
 
-	protected static String getEmail ()
+	public static String getEmail () throws EmployeeException
 	{
 		return um.getEmail();
 	}
 
-	protected static int getEmployeeNumber ()
+	public static int getEmployeeNumber () throws EmployeeException
 	{
 		return um.getEmployeeNumber();
 	}
 
-	protected static String getFullName ()
+	public static String getFullName () throws EmployeeException
 	{
 		return um.getFullName();
 	}
 
-	protected static int getUnitId ()
+	public static int getUnitId () throws EmployeeException
 	{
 		return um.getUnitId();
 	}
 
-	protected static boolean isAuthenticated ()
+	public static boolean isAuthenticated ()
 	{
 		return um.isAuthenticated();
 	}
 
 
 	// Expenses manipulations
-	protected static void createDomesticExpense(Date date, String projectCode, float amount, String remarks, String evidence, int expenseTypeId) throws ExpenseException{
+	public static void createDomesticExpense(Date date, String projectCode, float amount, String remarks, String evidence, int expenseTypeId) throws ExpenseException{
 		em.createExpense(date, projectCode, amount, remarks, evidence, "EUR", expenseTypeId, 1);
 	}
 
-	protected static void createAbroadExpense(Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId) throws ExpenseException{
+	public static void createAbroadExpense(Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId) throws ExpenseException{
 		em.createExpense(date, projectCode, amount, remarks, evidence, currency, expenseTypeId, 2);
 	}
 	
-	protected static List<Expense> getExpenses() {
+	public static List<Expense> getExpenses() {
 		return em.getExpenses();
 	}
 	
-	protected static Expense getExpense (long id)
+	public static Expense getExpense (long id)
 	{
 		return em.getExpense(id);
 	}
 	
-	protected static void updateExpense(Expense e) {
+	public static void updateExpense(Expense e) {
 		em.updateExpense(e);
 	}
 	
-	protected static void deleteExpense(Expense e) {
+	public static void deleteExpense(Expense e) {
 		em.deleteExpense(e);
 	}
 
 	// Form manipulations
-	protected static void send (String signature, String remarks, boolean notification)
+	public static void send (String signature, String remarks, boolean notification) throws EmployeeException, ExpenseException
 	{
 		efm = new ExpenseFormManager(um.getId(), signature, remarks, notification, em.getExpenses());
-		efm.token = um.getToken();
+		efm.setToken(um.getToken());
 		efm.send();
 	}
 
-	protected static String getFormPDF (int formId, String filename)
+	public static String getFormPDF (int formId, String filename) throws ExpenseException
 	{
 		return efm.getFormPDF(formId, filename);
 	}
 
-	protected static List<SavedExpenseForm> getExpenseForms ()
+	public static List<SavedExpenseForm> getExpenseForms () throws ExpenseException, EmployeeException
 	{
 		return efm.getExpenseForms(um.getToken());
 	}
 
 	// Currency stuff
-	protected static float convertToEuro (float amount, string currency)
+	public static float convertToEuro (float amount, String currency)
 	{
 		return curAPI.convertToEuro(amount, currency);
 	}
 	
-	protected static Dictionary<int, string> currencies {
-		get {
-			List<string> cl = curAPI.getCurrencies();
-			Dictionary<int, string> result = new Dictionary<int, string>();
+	public static Map<Integer, String> getCurrencies() {
+		List<String> cl = new ArrayList<String>(curAPI.getCurrencies());
+		Map<Integer, String> result = new HashMap<Integer, String>();
 
-			for (int i = 0; i < cl.Count; i++)
-			{
-				result.Add(i+1, cl[i]);
-			}
-
-			return result;
+		for (int i = 0; i < cl.size(); i++)
+		{
+			result.put(i+1, cl.get(i));
 		}
+
+		return result;
 	}
 
 	// Projects
-	protected static Dictionary<int, string> projectCodes {
-		get {
-			if(_projectCodes.Count <= 0) {
-				List<string> projects = em.getProjectCodeSuggestion(""); // Get all projects
-				
-				for (int i = 0; i < projects.Count; i++)
-				{
-					_projectCodes.Add(i+1, projects[i]);
-				}
+	public static Map<Integer, String> getProjectCodes() {
+		if(_projectCodes.size() <= 0) {
+			List<String> projects = em.getProjectCodeSuggestion(""); // Get all projects
+			
+			for (int i = 0; i < projects.size(); i++)
+			{
+				_projectCodes.put(i+1, projects.get(i));
 			}
-
-			return _projectCodes;
 		}
+
+		return _projectCodes;
+	}
+
+	@Override
+	public void onLoginCompleted(Employee user) {
+		// TODO Auto-generated method stub
+		listener.onLoginCompleted(user);
+	}
+
+	@Override
+	public void onLogoutCompleted() {
+		// TODO Auto-generated method stub
+		listener.onLogoutCompleted();
 	}
 }

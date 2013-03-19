@@ -1,5 +1,7 @@
 package be.bertouttier.expenseapp;
 
+import be.bertouttier.expenseapp.Core.BL.Backend;
+import be.bertouttier.expenseapp.Core.BL.BackendListener;
 import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManager;
 import be.bertouttier.expenseapp.Core.BL.Managers.EmployeeManagerListener;
 import be.bertouttier.expenseapp.Core.DAL.Employee;
@@ -12,24 +14,24 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
-public class HomeActivity extends Activity implements EmployeeManagerListener {
-	private EmployeeManager em = null;
+public class HomeActivity extends Activity implements BackendListener {
+	private Backend backend = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_layout);
 		
-		em = new EmployeeManager(getApplicationContext(), this);
+		backend = Backend.getInstance(getApplicationContext(), this);
 		
 		TextView lblWelcome = (TextView) findViewById (R.id.lblWelcome);
 		
 		
 		try { 
-			if (!em.isAuthenticated ()) {
+			if (!backend.isAuthenticated ()) {
 				startActivity(new Intent(this, LoginActivity.class));
 			}
-			lblWelcome.setText("Welcome " + em.getFullName () + "!");
+			lblWelcome.setText("Welcome " + backend.getFullName () + "!");
 		} catch (Exception ex) {
 			// Show error dialog
 		}
@@ -59,7 +61,7 @@ public class HomeActivity extends Activity implements EmployeeManagerListener {
 		Log.d("!!", "test");
 //		Backend.logout();
 		try {
-			em.logout();
+			backend.logout();
 		} catch (EmployeeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

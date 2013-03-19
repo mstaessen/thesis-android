@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import be.bertouttier.expenseapp.Core.BL.Backend;
 import be.bertouttier.expenseapp.Core.BL.Managers.ExpenseManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -40,7 +41,7 @@ public class AbroadActivity extends Activity {
 	private ImageButton chooseButton;
 	private android.net.Uri imageUri;
 	private Spinner currencySpinner;
-	private ExpenseManager em;
+	private Backend backend;
 	
 	@Override
 	protected void onCreate (Bundle bundle)
@@ -50,7 +51,7 @@ public class AbroadActivity extends Activity {
 		// Create your application here
 		setContentView (R.layout.abroad_tab_layout);
 		
-		em = new ExpenseManager(getApplicationContext());
+		backend = Backend.getInstance(getApplicationContext(), null);
 		
 		// get views
 		pickDate = (TextView) findViewById (R.id.pickDate);
@@ -64,7 +65,7 @@ public class AbroadActivity extends Activity {
 
 		try {
 			// Set autocomplete view
-			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, em.getProjectCodeSuggestion(""));
+			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, (String[])backend.getProjectCodes().values().toArray());
 			txtProjectCode.setAdapter(adapter);
 
 			// set currency spinner
@@ -174,7 +175,7 @@ public class AbroadActivity extends Activity {
 		}
 
 		try {
-			em.createAbroadExpense(date.getTime(), txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , (String)currencySpinner.getSelectedItem(), Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
+			backend.createAbroadExpense(date.getTime(), txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , (String)currencySpinner.getSelectedItem(), Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
 			Toast.makeText(this, "Added expense.", Toast.LENGTH_SHORT).show(); 
 		} catch(Exception ex){
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();

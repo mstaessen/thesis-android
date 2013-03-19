@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import be.bertouttier.expenseapp.Core.BL.Backend;
 import be.bertouttier.expenseapp.Core.BL.Managers.ExpenseManager;
 
 import android.os.Bundle;
@@ -39,7 +40,7 @@ public class DomesticActivity extends Activity {
 	private AutoCompleteTextView txtProjectCode;
 	private ImageButton chooseButton;
 	private android.net.Uri imageUri;
-	private ExpenseManager em;
+	private Backend backend;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,8 +54,8 @@ public class DomesticActivity extends Activity {
 	{
 		super.onCreate(bundle);
 		setContentView(R.layout.domestic_tab_layout);
-
-		em = new ExpenseManager(getApplicationContext());
+		
+		backend = Backend.getInstance(getApplicationContext(), null);
 		
 		// get views
 		pickDate = (TextView) findViewById (R.id.pickDate);
@@ -66,7 +67,7 @@ public class DomesticActivity extends Activity {
 
 		try {
 			// Set autocomplete view
-			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, em.getProjectCodeSuggestion(""));
+			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, (String[])backend.getProjectCodes().values().toArray());
 			txtProjectCode.setAdapter(adapter);
 		} catch (Exception ex) {
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -121,7 +122,7 @@ public class DomesticActivity extends Activity {
 
 		try {
 //			em.createDomesticExpense(date, txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
-			em.createDomesticExpense(date.getTime(), txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), "TestImg" , Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
+			backend.createDomesticExpense(date.getTime(), txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), "TestImg" , Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
 			Toast.makeText(this, "Added expense.", Toast.LENGTH_SHORT).show(); 
 		} catch(Exception ex){
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
