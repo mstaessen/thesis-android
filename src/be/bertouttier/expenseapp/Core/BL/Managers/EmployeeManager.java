@@ -21,20 +21,20 @@ public class EmployeeManager implements UserServiceListener {
 	private EmployeeManagerListener listener;
     
 	public EmployeeManager(Context context, EmployeeManagerListener listener){
-            setContext(context);
-            SQLiteOpenHelper openHelper = new EmployeeOpenHelper(context, "EMPLOYEEDATABASE", null, 2);
-            setDatabase(openHelper.getWritableDatabase());
+        setContext(context);
+        SQLiteOpenHelper openHelper = new EmployeeOpenHelper(context, "EMPLOYEEDATABASE", null, 2);
+        setDatabase(openHelper.getWritableDatabase());
 
-            this.employeeDao = new EmployeeDao(new EmployeeTableDefinition(), database); 
-            this.listener = listener;
-            this.svc = new UserService(this);
-            
-            try {
-				getEmployeeFromDb ();
-			} catch (Exception ex) {
+        this.employeeDao = new EmployeeDao(new EmployeeTableDefinition(), database); 
+        this.listener = listener;
+        this.svc = new UserService(this);
+        
+        try {
+			getEmployeeFromDb ();
+		} catch (Exception ex) {
 //				throw new EmployeeException("No user in database. Please use the .login() method.", ex);
-				Log.d("!!", "No user in database. Please use the .login() method.");
-			}
+			Log.d("!!", "No user in database. Please use the .login() method.");
+		}
     }
     
 	// getters/setters
@@ -162,11 +162,11 @@ public class EmployeeManager implements UserServiceListener {
     private long saveEmployee(Employee employee){
         long result = 0;                
         try {
-                getDatabase().beginTransaction();
-                result = getEmployeeDao().save(employee);
-                getDatabase().setTransactionSuccessful();
+	        getDatabase().beginTransaction();
+	        result = getEmployeeDao().save(employee);
+	        getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }               
         getDatabase().endTransaction();
         return result;

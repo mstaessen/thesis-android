@@ -1,19 +1,24 @@
 package be.bertouttier.expenseapp.Core.BL.Managers;
 
+import java.io.File;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import be.bertouttier.expenseapp.Core.DAL.Expense;
+import be.bertouttier.expenseapp.Core.DAL.SavedExpenseForm;
 import be.bertouttier.expenseapp.Core.DL.ExpenseDao;
 import be.bertouttier.expenseapp.Core.DL.ExpenseOpenHelper;
 import be.bertouttier.expenseapp.Core.DL.ExpenseTableDefinition;
 import be.bertouttier.expenseapp.Core.Exceptions.ExpenseException;
 import be.bertouttier.expenseapp.Core.SAL.ExpenseService;
+import be.bertouttier.expenseapp.Core.SAL.ExpenseServiceListener;
 
-public class ExpenseManager {
+public class ExpenseManager implements ExpenseServiceListener {
 
 	private Context context;
     private SQLiteDatabase database;
@@ -28,7 +33,7 @@ public class ExpenseManager {
 
         this.expenseDao = new ExpenseDao(new ExpenseTableDefinition(), database); 
 //        this.listener = listener;
-        this.svc = new ExpenseService();
+        this.svc = new ExpenseService(this);
 	}
 	
 	//Getters and setters
@@ -59,24 +64,20 @@ public class ExpenseManager {
 	// Methods
 	public List<String> getProjectCodeSuggestion (String searchTerm)
 	{
-//		try {
-			return svc.getProjectCodeSuggestion (searchTerm);
-//		} catch (Exception ex) {
-////			throw new ExpenseException ("Error while getting project codes for searchterm : " + searchTerm, ex);
-//		}
+		return svc.getProjectCodeSuggestion (searchTerm);
 	}
 
 	
 
-	public void createDomesticExpense(Calendar date, String projectCode, float amount, String remarks, String evidence, int expenseTypeId) throws ExpenseException{
+	public void createDomesticExpense(Date date, String projectCode, float amount, String remarks, String evidence, int expenseTypeId) throws ExpenseException{
 		createExpense(date, projectCode, amount, remarks, evidence, "EUR", expenseTypeId, 1);
 	}
 
-	public void createAbroadExpense(Calendar date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId) throws ExpenseException{
+	public void createAbroadExpense(Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId) throws ExpenseException{
 		createExpense(date, projectCode, amount, remarks, evidence, currency, expenseTypeId, 2);
 	}
 
-	private void createExpense(Calendar date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId, int expenseLocationId) throws ExpenseException
+	private void createExpense(Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId, int expenseLocationId) throws ExpenseException
 	{
 		Expense e = new Expense(date, projectCode, amount, remarks, evidence, currency, expenseTypeId, expenseLocationId);
 		saveExpense (e);
@@ -98,10 +99,10 @@ public class ExpenseManager {
 	{
 		boolean result = false;
 		try {
-		getDatabase().beginTransaction();
-		getExpenseDao().update(expense, expense.getId());
-		getDatabase().setTransactionSuccessful();
-		result = true;
+			getDatabase().beginTransaction();
+			getExpenseDao().update(expense, expense.getId());
+			getDatabase().setTransactionSuccessful();
+			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -147,4 +148,29 @@ public class ExpenseManager {
         getDatabase().endTransaction();
         return result;
     }
+
+	@Override
+	public void onGetProjectCodeSuggestionCompleted(List<String> projects) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSaveExpenseCompleted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetExpenseFormsCompleted(
+			Collection<SavedExpenseForm> expenseForm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetExpenseFormPDFCompleted(File pdf) {
+		// TODO Auto-generated method stub
+		
+	}
 }

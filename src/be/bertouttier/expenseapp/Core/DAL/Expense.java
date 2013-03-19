@@ -1,9 +1,8 @@
 package be.bertouttier.expenseapp.Core.DAL;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.droidpersistence.annotation.Column;
 import org.droidpersistence.annotation.PrimaryKey;
 import org.droidpersistence.annotation.Table;
@@ -11,37 +10,33 @@ import org.droidpersistence.annotation.Table;
 @Table(name="Expenses")
 public class Expense {
 	
-	private Map<Integer,String> types = new HashMap<Integer, String>(){{
-	    put(1, "Hotel");
-	    put(2, "Lunch");
-	    put(3, "Diner");
-	    put(4, "Ticket");
-	    put(5, "Restaurant");
-	    put(6, "Other...");
-	}};
-	
 	// Fields
 	@PrimaryKey(autoIncrement = true)
     @Column(name="id")
 	private long id;
 	@Column(name="date")
-	private Calendar date;
-	@Column(name="projectCode")
+	private Date date; // OK
+	@Column(name="projectcode")
 	private String projectCode;
 	@Column(name="amount")
-	private float amount;
+	private Float amount; // OK
 	@Column(name="remarks")
 	private String remarks;
 	@Column(name="evidence")
-	private String evidence;
+	private String evidence; //OK
 	@Column(name="currency")
-	private String currency;
-	@Column(name="expenseTypeId")
+	private String currency; // OK
+	@Column(name="expensetypeid")
 	private int expenseTypeId;
-	@Column(name="expenseLocationId")
+	@Column(name="expenselocationid")
 	private int expenseLocationId;
 
-	public Expense (Calendar date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId, int expenseLocationId)
+	public Expense ()
+	{
+		
+	}
+	
+	public Expense (Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId, int expenseLocationId)
 	{
 		this.setDate(date);
 		this.setProjectCode(projectCode);
@@ -62,11 +57,11 @@ public class Expense {
 		this.id = id;
 	}
 
-	public Calendar getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(Calendar date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
@@ -129,6 +124,14 @@ public class Expense {
 	// Methods
 	public String getExpenseType()
 	{
+		Map<Integer,String> types = new HashMap<Integer, String>(){{
+		    put(1, "Hotel");
+		    put(2, "Lunch");
+		    put(3, "Diner");
+		    put(4, "Ticket");
+		    put(5, "Restaurant");
+		    put(6, "Other...");
+		}};
 		return types.get(this.expenseTypeId);
 	}
 

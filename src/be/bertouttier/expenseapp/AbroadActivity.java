@@ -57,7 +57,6 @@ public class AbroadActivity extends Activity {
 		txtProjectCode = (AutoCompleteTextView) findViewById (R.id.txtProjectCode);
 		currencySpinner = (Spinner) findViewById (R.id.currencySpinner);
 		chooseButton = (ImageButton) findViewById (R.id.chooseImageButton);
-//		Button addButton = (Button) findViewById (R.id.addButton);
 		EditText txtAmount = (EditText) findViewById (R.id.txtAmount);
 
 		date = new GregorianCalendar();
@@ -98,7 +97,7 @@ public class AbroadActivity extends Activity {
 				
 			}
 	    });
-//		currencySpinner.ItemSelected += OnAmountOrCurrencyChange;
+
 		currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 		    @Override
 		    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -175,7 +174,7 @@ public class AbroadActivity extends Activity {
 		}
 
 		try {
-			em.createAbroadExpense(date, txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , (String)currencySpinner.getSelectedItem(), Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
+			em.createAbroadExpense(date.getTime(), txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , (String)currencySpinner.getSelectedItem(), Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
 			Toast.makeText(this, "Added expense.", Toast.LENGTH_SHORT).show(); 
 		} catch(Exception ex){
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();

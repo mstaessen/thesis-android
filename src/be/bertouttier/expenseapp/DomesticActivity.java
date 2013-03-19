@@ -60,7 +60,6 @@ public class DomesticActivity extends Activity {
 		pickDate = (TextView) findViewById (R.id.pickDate);
 		txtProjectCode = (AutoCompleteTextView) findViewById (R.id.txtProjectCode);
 		chooseButton = (ImageButton) findViewById (R.id.chooseImageButton);
-//		Button addButton = (Button) findViewById (R.id.addButton);
 
 		date = new GregorianCalendar();
 		UpdateDisplay ();
@@ -68,7 +67,6 @@ public class DomesticActivity extends Activity {
 		try {
 			// Set autocomplete view
 			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, em.getProjectCodeSuggestion(""));
-//			ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, new String[] {"Your info","Overview","Add"});
 			txtProjectCode.setAdapter(adapter);
 		} catch (Exception ex) {
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -122,7 +120,8 @@ public class DomesticActivity extends Activity {
 		}
 
 		try {
-			em.createDomesticExpense(date, txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
+//			em.createDomesticExpense(date, txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), BitmapToBase64String(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri)) , Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
+			em.createDomesticExpense(date.getTime(), txtProjectCode.getText().toString(), Float.parseFloat(txtAmout.getText().toString()), txtRemarks.getText().toString(), "TestImg" , Integer.parseInt(findViewById(typeGroup.getCheckedRadioButtonId()).getTag().toString())); 
 			Toast.makeText(this, "Added expense.", Toast.LENGTH_SHORT).show(); 
 		} catch(Exception ex){
 			Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
