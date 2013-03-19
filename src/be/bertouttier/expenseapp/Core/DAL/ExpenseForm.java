@@ -1,6 +1,7 @@
 package be.bertouttier.expenseapp.Core.DAL;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -8,7 +9,7 @@ import com.google.gson.Gson;
 public class ExpenseForm {
 
 	// Private fields
-	private Calendar date;
+	private Date date;
 	private int employeeId;
 	private String signature;
 	private boolean notification;
@@ -18,13 +19,22 @@ public class ExpenseForm {
 	public ExpenseForm() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public ExpenseForm(Date date, int employeeId, String signature, boolean notification, String remarks, List<Expense> expenses) {
+		this.date = date;
+		this.employeeId = employeeId;
+		this.signature = signature;
+		this.notification = notification;
+		this.remarks = remarks;
+		this.expenses = expenses;
+	}
 
 	// Public getters and setters
-	public Calendar getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(Calendar date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

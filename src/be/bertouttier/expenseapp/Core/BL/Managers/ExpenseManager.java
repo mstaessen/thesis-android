@@ -67,17 +67,7 @@ public class ExpenseManager implements ExpenseServiceListener {
 		return svc.getProjectCodeSuggestion (searchTerm);
 	}
 
-	
-
-	public void createDomesticExpense(Date date, String projectCode, float amount, String remarks, String evidence, int expenseTypeId) throws ExpenseException{
-		createExpense(date, projectCode, amount, remarks, evidence, "EUR", expenseTypeId, 1);
-	}
-
-	public void createAbroadExpense(Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId) throws ExpenseException{
-		createExpense(date, projectCode, amount, remarks, evidence, currency, expenseTypeId, 2);
-	}
-
-	private void createExpense(Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId, int expenseLocationId) throws ExpenseException
+	public void createExpense(Date date, String projectCode, float amount, String remarks, String evidence, String currency, int expenseTypeId, int expenseLocationId) throws ExpenseException
 	{
 		Expense e = new Expense(date, projectCode, amount, remarks, evidence, currency, expenseTypeId, expenseLocationId);
 		saveExpense (e);
